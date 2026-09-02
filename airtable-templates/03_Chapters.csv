@@ -1,0 +1,50 @@
+id,unit_id,order_index,title,page_start,page_end,estimated_minutes
+ch-1,unit-1,1,Thinking Like a Scientist,1,12,15
+ch-2,unit-1,2,Scientific Experiments,13,24,15
+ch-3,unit-1,3,Lab Reports and Evaluating Results,25,36,15
+ch-4,unit-1,4,SI Units and Measurements,37,46,12
+ch-5,unit-1,5,Lab Safety and Scientific Tools,47,54,10
+ch-6,unit-2,6,"Matter, Properties, and Phases",55,72,20
+ch-7,unit-2,7,"Periodic Table, Atomic Structure, and Compounds",73,90,25
+ch-8,unit-2,8,Solutions and Fluids,91,100,12
+ch-9,unit-3,9,Motion,101,112,15
+ch-10,unit-3,10,"Force and Newton's Laws of Motion",113,124,18
+ch-11,unit-3,11,"Gravity, Friction, and More Forces",125,136,15
+ch-12,unit-3,12,Work and Machines,137,148,15
+ch-13,unit-4,13,Forms of Energy,149,160,15
+ch-14,unit-4,14,Thermal Energy,161,172,15
+ch-15,unit-4,15,Light and Sound Waves,173,184,18
+ch-16,unit-4,16,Electricity and Magnetism,185,196,18
+ch-17,unit-4,17,Electrical Energy Sources,197,208,15
+ch-18,unit-5,18,The Solar System and Space Exploration,209,222,18
+ch-19,unit-5,19,The Sun-Earth-Moon System,223,234,15
+ch-20,unit-5,20,Stars and Galaxies,235,246,15
+ch-21,unit-5,21,The Origin of the Universe and Our Solar System,247,256,12
+ch-22,unit-6,22,"Minerals, Rocks, and the Earth's Structure",257,270,18
+ch-23,unit-6,23,Earth's Crust in Motion,271,282,15
+ch-24,unit-6,24,Weathering and Erosion,283,294,15
+ch-25,unit-6,25,"The Earth's Atmosphere and Water Cycle",295,306,15
+ch-26,unit-6,26,Weather,307,318,15
+ch-27,unit-6,27,Climate,319,326,10
+ch-28,unit-7,28,Organisms and Biological Classification,327,340,18
+ch-29,unit-7,29,Cell Theory and Cell Structure,341,352,15
+ch-30,unit-7,30,Cellular Transport and Metabolism,353,366,18
+ch-31,unit-7,31,Cell Reproduction and Protein Synthesis,367,378,18
+ch-32,unit-8,32,Plant Structure and Reproduction,379,392,18
+ch-33,unit-8,33,Animals: Invertebrates,393,404,15
+ch-34,unit-8,34,Animals: Vertebrates,405,414,12
+ch-35,unit-8,35,Animal and Plant Homeostasis and Behavior,415,422,10
+ch-36,unit-9,36,Skeletal and Muscular Systems,423,434,15
+ch-37,unit-9,37,Nervous and Endocrine Systems,435,446,15
+ch-38,unit-9,38,Digestive and Excretory Systems,447,456,12
+ch-39,unit-9,39,Respiratory and Circulatory Systems,457,468,15
+ch-40,unit-9,40,Immune and Lymphatic Systems,469,478,12
+ch-41,unit-9,41,Human Reproductive and Development,479,486,10
+ch-42,unit-10,42,Heredity and Genetics,487,498,18
+ch-43,unit-10,43,Evolution,499,508,12
+ch-44,unit-10,44,Fossils and Rock Ages,509,516,10
+ch-45,unit-10,45,History of Life on Earth,517,522,8
+ch-46,unit-11,46,Ecology and Ecosystems,523,528,8
+ch-47,unit-11,47,Interdependence and the Cycling of Energy and Matter,529,534,8
+ch-48,unit-11,48,Ecological Succession and Biomes,535,540,8
+ch-49,unit-11,49,Natural Resources and Conservation,541,544,6

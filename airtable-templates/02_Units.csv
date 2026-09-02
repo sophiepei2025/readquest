@@ -1,0 +1,12 @@
+id,book_id,order_index,title,page_start,page_end
+unit-1,book-science-ace,1,Scientific Investigation,1,54
+unit-2,book-science-ace,2,"Matter, Chemical Reactions, and Solutions",55,100
+unit-3,book-science-ace,3,"Motion, Forces, and Work",101,148
+unit-4,book-science-ace,4,Energy,149,208
+unit-5,book-science-ace,5,"Outer Space: The Universe and the Solar System",209,256
+unit-6,book-science-ace,6,"The Earth, Weather, Atmosphere, and Climate",257,326
+unit-7,book-science-ace,7,"Life: Classification and Cells",327,378
+unit-8,book-science-ace,8,Plants and Animals,379,422
+unit-9,book-science-ace,9,The Human Body and Body Systems,423,486
+unit-10,book-science-ace,10,"History of Life: Heredity, Evolution, and Fossils",487,522
+unit-11,book-science-ace,11,"Ecology: Habitats, Interdependence, and Resources",523,544

@@ -1,0 +1,11 @@
+id,name,subject_area,difficulty
+SCI-METHOD-HYPOTHESIS,Scientific Hypothesis,Scientific Inquiry,easy
+SCI-METHOD-VARIABLES,Independent & Dependent Variables,Scientific Inquiry,medium
+SCI-METHOD-CONTROL,Experimental Controls & Constants,Scientific Inquiry,medium
+SCI-METHOD-OBSERVATION,Qualitative & Quantitative Observations,Scientific Inquiry,easy
+SCI-METHOD-EXPERIMENT,Experimental Design & Repetition,Scientific Inquiry,medium
+SCI-CHEM-MATTER-PHASES,States of Matter & Phase Changes,Chemistry,medium
+SCI-CHEM-PERIODIC-TABLE,Atoms & Periodic Table Basics,Chemistry,hard
+SCI-PHYS-NEWTON-LAWS,Newton's Laws of Motion,Physics,medium
+SCI-BIO-CELL-THEORY,Cell Theory & Organelles,Biology,medium
+SCI-ECOL-FOOD-WEBS,Food Chains & Energy Flow,Ecology,easy
