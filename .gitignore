@@ -26,6 +26,7 @@
 *.db
 *.db-journal
 *.sqlite
+*.png
 
 # debug
 npm-debug.log*
