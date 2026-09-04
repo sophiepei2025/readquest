@@ -9,6 +9,8 @@ import { allQuizzes, getQuizByChapterOrUnitId } from "@/data/all-quizzes";
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"quiz" | "book" | "review" | "parent">("quiz");
   const [selectedUnitId, setSelectedUnitId] = useState<string>("ch-1");
+  const [showPdfModal, setShowPdfModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const studentName = "Simon";
   const book = sampleBookStructure;
@@ -597,7 +599,7 @@ export default function HomePage() {
                     </p>
                   </div>
                   <button
-                    onClick={() => alert("报告生成成功！模拟下载 Simon_Science_Week_Report.pdf")}
+                    onClick={() => setShowPdfModal(true)}
                     className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3.5 text-sm font-bold text-purple-700 shadow-md transition-all hover:bg-purple-50 active:scale-95"
                   >
                     📄 立即导出报告
@@ -605,6 +607,118 @@ export default function HomePage() {
                 </div>
               </div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* PDF Export Modal */}
+        <AnimatePresence>
+          {showPdfModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white p-6 md:p-8 shadow-2xl dark:bg-slate-900 dark:border dark:border-slate-800"
+              >
+                {/* Close button */}
+                <button
+                  onClick={() => setShowPdfModal(false)}
+                  className="absolute top-5 right-5 rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400"
+                >
+                  ✕
+                </button>
+
+                {/* Report Header */}
+                <div className="border-b border-slate-200 pb-5 dark:border-slate-800">
+                  <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-bold text-sm">
+                    <span>📖 ReadQuest 学情诊断周报</span>
+                    <span>·</span>
+                    <span>第 36 周</span>
+                  </div>
+                  <h2 className="mt-1 text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    {studentName} 的科学学习与检测报告
+                  </h2>
+                  <div className="mt-2 flex flex-wrap gap-4 text-xs text-slate-500">
+                    <span>教材：《{book.title}》</span>
+                    <span>生成时间：{new Date().toISOString().split("T")[0]}</span>
+                    <span>学情评级：<strong className="text-green-600">A- (良好)</strong></span>
+                  </div>
+                </div>
+
+                {/* Report Body */}
+                <div className="mt-6 space-y-6 text-sm">
+                  {/* 1. Progress Summary */}
+                  <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/60">
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-2">📊 核心学情数据</h4>
+                    <div className="grid grid-cols-3 gap-3 text-center">
+                      <div className="bg-white p-3 rounded-xl dark:bg-slate-800">
+                        <div className="text-xl font-bold text-blue-600">{parentMetrics.completedChapters}/49</div>
+                        <div className="text-xs text-slate-400">已读章节</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl dark:bg-slate-800">
+                        <div className="text-xl font-bold text-green-600">{parentMetrics.avgScore}%</div>
+                        <div className="text-xs text-slate-400">平均正确率</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl dark:bg-slate-800">
+                        <div className="text-xl font-bold text-purple-600">5 次</div>
+                        <div className="text-xs text-slate-400">完成测验数</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. Knowledge Weak Points */}
+                  <div>
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 mb-2">⚠️ 薄弱考点诊断</h4>
+                    <ul className="space-y-2">
+                      {parentMetrics.weakTags.map((tag, idx) => (
+                        <li key={idx} className="flex items-center justify-between rounded-xl border border-slate-100 p-2.5 text-xs dark:border-slate-800">
+                          <span className="font-medium text-slate-700 dark:text-slate-300">{tag.tag}</span>
+                          <span className="text-red-500 font-bold">错误率 {tag.errorRate}%（{tag.count} 道错题）</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 3. AI Learning Advice */}
+                  <div className="rounded-2xl border border-purple-200 bg-purple-50 p-4 dark:border-purple-900/50 dark:bg-purple-950/30">
+                    <h4 className="font-bold text-purple-900 dark:text-purple-300 mb-1">💡 下周实体书针对性复习建议</h4>
+                    <p className="text-xs text-purple-800 dark:text-purple-300 leading-relaxed">
+                      1. 请引导 Simon 重新翻阅实体书<strong>第 37–46 页（SI Units）</strong>，重点练习米制与英制单位换算。<br />
+                      2. 复习<strong>第 47–54 页（Lab Safety）</strong>的警示标志与实验器材使用规范。<br />
+                      3. 下周将开启 Unit 2（物质与化学反应）的综合测试，建议提前预习第 55–72 页。
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-8 flex flex-wrap gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <button
+                    onClick={() => window.print()}
+                    className="flex-1 inline-flex items-center justify-center gap-2 rounded-2xl bg-purple-600 py-3 text-sm font-bold text-white shadow-md hover:bg-purple-700 active:scale-95"
+                  >
+                    <span>🖨️</span>
+                    <span>打印 / 另存为 PDF</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      const text = `【ReadQuest 学情周报】\n学生：${studentName}\n教材：《${book.title}》\n本周进度：已完成 ${parentMetrics.completedChapters}/49 章节\n平均正确率：${parentMetrics.avgScore}%\n薄弱知识点：${parentMetrics.weakTags.map(t => t.tag).join("、")}\n下周建议：重点复习第4-5章。`;
+                      navigator.clipboard.writeText(text);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+                  >
+                    <span>{copied ? "✓ 已复制" : "📋 复制文本摘要"}</span>
+                  </button>
+                  <button
+                    onClick={() => setShowPdfModal(false)}
+                    className="rounded-2xl px-5 py-3 text-sm font-medium text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  >
+                    关闭
+                  </button>
+                </div>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
       </main>
