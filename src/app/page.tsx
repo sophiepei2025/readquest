@@ -187,14 +187,22 @@ export default function HomePage() {
             </button>
           </nav>
 
-          {/* User Profile Pill */}
-          <div className="hidden lg:flex items-center gap-2 border-l border-slate-200 pl-4 dark:border-slate-800">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-              S
-            </div>
-            <div className="text-left">
-              <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Simon</div>
-              <div className="text-[10px] text-slate-400">7th Grade STEM</div>
+          {/* User Profile Pill & Login */}
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:border-blue-300 hover:text-blue-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+            >
+              🔐 登录 / 切换账号
+            </Link>
+            <div className="hidden sm:flex items-center gap-2 border-l border-slate-200 pl-3 dark:border-slate-800">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                S
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">Simon</div>
+                <div className="text-[10px] text-slate-400">7th Grade STEM</div>
+              </div>
             </div>
           </div>
         </div>
