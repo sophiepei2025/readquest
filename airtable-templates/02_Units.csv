@@ -10,3 +10,24 @@ unit-8,book-science-ace,8,Plants and Animals,379,422
 unit-9,book-science-ace,9,The Human Body and Body Systems,423,486
 unit-10,book-science-ace,10,"History of Life: Heredity, Evolution, and Fossils",487,522
 unit-11,book-science-ace,11,"Ecology: Habitats, Interdependence, and Resources",523,544
+bio-unit-1,book-biology-ace,1,Basics of Biology,1,42
+bio-unit-2,book-biology-ace,2,The Chemistry of Life,43,82
+bio-unit-3,book-biology-ace,3,Cell Theory & Energy,83,140
+bio-unit-4,book-biology-ace,4,"Bacteria, Viruses & Disease",141,176
+bio-unit-7,book-biology-ace,7,Plants,229,266
+bio-unit-9,book-biology-ace,9,The Human Body & Homeostasis,325,412
+bio-unit-10,book-biology-ace,10,Genetics & DNA,413,450
+chem-unit-1,book-chemistry-ace,1,Basics of Chemistry & Measurement,1,72
+chem-unit-2,book-chemistry-ace,2,All About Matter & Phases,73,112
+chem-unit-4,book-chemistry-ace,4,Elements and the Periodic Table,135,178
+chem-unit-6,book-chemistry-ace,6,Chemical Compounds & The Mole,231,272
+chem-unit-7,book-chemistry-ace,7,Chemical Reactions & Stoichiometry,273,310
+chem-unit-10,book-chemistry-ace,10,"Acids, Bases & pH",383,422
+math-unit-1,book-math-ace,1,The Number System & Integers,1,84
+math-unit-2,book-math-ace,2,"Ratios, Proportions & Percents",85,164
+math-unit-3,book-math-ace,3,Expressions and Equations,165,250
+math-unit-4,book-math-ace,4,Geometry & Pythagorean Theorem,251,354
+alg-unit-1,book-algebra-ace,1,Arithmetic Properties & PEMDAS,1,22
+alg-unit-4,book-algebra-ace,4,Exponents & Like Terms,141,174
+alg-unit-5,book-algebra-ace,5,Linear Equations & Systems,175,246
+alg-unit-6,book-algebra-ace,6,"Graphing Lines, Slope & Intercepts",247,324

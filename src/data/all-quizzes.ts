@@ -575,8 +575,14 @@ export const quizUnit8: Quiz = {
   ],
 };
 
+import { quizBiologyCellTheory } from './quizzes-biology';
+import { quizChemistryMatterAndReactions } from './quizzes-chemistry';
+import { quizMathFoundations } from './quizzes-math';
+import { quizAlgebraFoundations } from './quizzes-algebra';
+
 // ─── Quiz Registry Map ──────────────────────────────────────────────────────
 export const allQuizzes: Record<string, Quiz> = {
+  // General Science Book Quizzes
   'ch-1': sampleQuizUnit1Ch1,
   'unit-1': sampleQuizUnit1Ch1,
   'ch-6': quizUnit2,
@@ -587,6 +593,30 @@ export const allQuizzes: Record<string, Quiz> = {
   'unit-4': quizUnit4,
   'ch-32': quizUnit8,
   'unit-8': quizUnit8,
+
+  // Biology Book Quizzes
+  'bio-ch-9': quizBiologyCellTheory,
+  'bio-ch-1': quizBiologyCellTheory,
+  'bio-unit-3': quizBiologyCellTheory,
+  'quiz-bio-cells': quizBiologyCellTheory,
+
+  // Chemistry Book Quizzes
+  'chem-ch-8': quizChemistryMatterAndReactions,
+  'chem-ch-1': quizChemistryMatterAndReactions,
+  'chem-unit-2': quizChemistryMatterAndReactions,
+  'quiz-chem-matter': quizChemistryMatterAndReactions,
+
+  // Middle School Math Book Quizzes
+  'math-ch-15': quizMathFoundations,
+  'math-ch-1': quizMathFoundations,
+  'math-unit-2': quizMathFoundations,
+  'quiz-math-foundations': quizMathFoundations,
+
+  // Pre-Algebra & Algebra 1 Book Quizzes
+  'alg-ch-25': quizAlgebraFoundations,
+  'alg-ch-1': quizAlgebraFoundations,
+  'alg-unit-5': quizAlgebraFoundations,
+  'quiz-alg-equations': quizAlgebraFoundations,
 };
 
 export function getQuizByChapterOrUnitId(id: string): Quiz {
