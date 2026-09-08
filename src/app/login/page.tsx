@@ -12,28 +12,55 @@ export default function LoginPage() {
   const [parentEmail, setParentEmail] = useState("parent@readquest.app");
   const [password, setPassword] = useState("123456");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage("");
 
-    // Save demo session
-    if (typeof window !== "undefined") {
-      localStorage.setItem("readquest_role", role);
-      localStorage.setItem("readquest_user", role === "student" ? "Simon" : "家长 (Parent)");
-    }
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role,
+          studentCode,
+          parentEmail,
+          password,
+        }),
+      });
 
-    setTimeout(() => {
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setErrorMessage(data.error || "登录失败，请检查输入");
+        setIsLoading(false);
+        return;
+      }
+
+      // Save real session details
+      if (typeof window !== "undefined") {
+        localStorage.setItem("readquest_role", role);
+        localStorage.setItem("readquest_user", data.user.name);
+        localStorage.setItem("readquest_user_id", data.user.id);
+      }
+
       if (role === "student") {
         router.push("/?tab=quiz");
       } else {
         router.push("/parent/dashboard");
       }
-    }, 600);
+    } catch (err) {
+      console.error("Login request failed:", err);
+      setErrorMessage("连接服务器失败，请稍后再试");
+      setIsLoading(false);
+    }
   };
 
   const handleQuickDemo = (demoRole: "student" | "parent") => {
     setRole(demoRole);
+    setErrorMessage("");
     if (demoRole === "student") {
       setStudentCode("SIMON2026");
     } else {
@@ -93,6 +120,11 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
+            {errorMessage && (
+              <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-600 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-400">
+                ⚠️ {errorMessage}
+              </div>
+            )}
             {role === "student" ? (
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">

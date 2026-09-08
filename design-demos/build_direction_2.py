@@ -1,0 +1,922 @@
+# Direction 2: Friendly Candy Esports (Duolingo + Kahoot! + Blooket Benchmark)
+html_content = """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReadQuest - 像玩游戏一样读懂整本书！</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Nunito:wght@700;800;900;1000&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F9FD;
+      --duo-green: #58CC02;
+      --duo-green-dark: #46A302;
+      --duo-yellow: #FFC800;
+      --duo-yellow-dark: #E5A400;
+      --duo-blue: #1CB0F6;
+      --duo-blue-dark: #1899D6;
+      --kahoot-blue: #1368CE;
+      --kahoot-red: #E21B3C;
+      --kahoot-yellow: #D89E00;
+      --kahoot-green: #26890C;
+      --text: #202738;
+      --text-muted: #6B7280;
+      --card-bg: #FFFFFF;
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Nunito', 'Plus Jakarta Sans', -apple-system, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* 3D Button Utility */
+    .btn-3d {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 17px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.1s ease;
+      text-decoration: none;
+      user-select: none;
+    }
+    .btn-3d:active {
+      transform: translateY(4px);
+    }
+    .btn-green {
+      background: var(--duo-green);
+      color: #fff;
+      box-shadow: 0 6px 0 var(--duo-green-dark);
+    }
+    .btn-green:active { box-shadow: 0 2px 0 var(--duo-green-dark); }
+    
+    .btn-blue {
+      background: var(--duo-blue);
+      color: #fff;
+      box-shadow: 0 6px 0 var(--duo-blue-dark);
+    }
+    .btn-blue:active { box-shadow: 0 2px 0 var(--duo-blue-dark); }
+
+    .btn-yellow {
+      background: var(--duo-yellow);
+      color: #5B4000;
+      box-shadow: 0 6px 0 var(--duo-yellow-dark);
+    }
+    .btn-yellow:active { box-shadow: 0 2px 0 var(--duo-yellow-dark); }
+
+    /* Nav */
+    header {
+      background: #fff;
+      border-bottom: 2px solid #E5E9F2;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .logo-icon-wrap {
+      width: 44px;
+      height: 44px;
+      background: var(--duo-green);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 var(--duo-green-dark);
+      color: #fff;
+      font-size: 24px;
+      font-weight: 1000;
+    }
+    .logo-title {
+      font-size: 24px;
+      font-weight: 1000;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-item {
+      color: var(--text-muted);
+      font-weight: 800;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.15s;
+    }
+    .nav-item:hover { color: var(--duo-blue-dark); }
+
+    /* Streak Pill */
+    .streak-nav-pill {
+      background: #FFF4D9;
+      color: #B36B00;
+      border: 2px solid #FFE08A;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+    }
+
+    /* Hero */
+    .hero-wrap {
+      max-width: 1240px;
+      margin: 40px auto 60px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #EBF8FF;
+      color: var(--kahoot-blue);
+      font-weight: 900;
+      font-size: 14px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      border: 2px solid #BEE3F8;
+    }
+    .hero-heading {
+      font-size: 54px;
+      font-weight: 1000;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+      color: #1A202C;
+    }
+    .hero-heading span.color-green { color: var(--duo-green-dark); }
+    .hero-heading span.color-blue { color: var(--duo-blue); }
+    .hero-sub {
+      font-size: 19px;
+      color: var(--text-muted);
+      font-weight: 700;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* Kahoot PIN Entry Box */
+    .kahoot-pin-card {
+      background: #fff;
+      border: 3px solid #E2E8F0;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 12px 24px -6px rgba(19, 104, 206, 0.12), 0 4px 0 #CBD5E1;
+      position: relative;
+    }
+    .kahoot-shapes {
+      position: absolute;
+      top: -12px;
+      right: 24px;
+      display: flex;
+      gap: 6px;
+    }
+    .k-shape {
+      width: 22px;
+      height: 22px;
+      display: inline-block;
+    }
+    .k-red { background: var(--kahoot-red); border-radius: 4px; }
+    .k-blue { background: var(--kahoot-blue); transform: rotate(45deg); border-radius: 3px; }
+    .k-yellow { background: var(--kahoot-yellow); border-radius: 50%; }
+    .k-green { background: var(--kahoot-green); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+
+    .pin-title {
+      font-weight: 900;
+      font-size: 15px;
+      color: #4A5568;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pin-flex {
+      display: flex;
+      gap: 12px;
+    }
+    .pin-input {
+      flex: 1;
+      border: 3px solid #E2E8F0;
+      border-radius: 16px;
+      background: #F8FAFC;
+      padding: 14px 20px;
+      font-size: 24px;
+      font-weight: 1000;
+      letter-spacing: 5px;
+      color: #1E293B;
+      font-family: 'Nunito', monospace;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .pin-input:focus {
+      background: #fff;
+      border-color: var(--duo-blue);
+      box-shadow: 0 0 0 4px rgba(28, 176, 246, 0.2);
+    }
+
+    /* Right Character Stage */
+    .character-stage {
+      background: linear-gradient(135deg, #FFF9E6 0%, #E8F8FF 100%);
+      border: 3px solid #E5E9F2;
+      border-radius: var(--radius-xl);
+      padding: 36px 30px;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.06);
+      text-align: center;
+      position: relative;
+    }
+    .speech-bubble {
+      background: #fff;
+      border: 3px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 900;
+      color: #1E293B;
+      display: inline-block;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 0 #CBD5E1;
+      position: relative;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: #fff transparent;
+      display: block;
+      width: 0;
+    }
+    .mascot-wrapper {
+      animation: float 3s ease-in-out infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+    .streak-banner {
+      background: #FF9600;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 18px;
+      box-shadow: 0 5px 0 #D97706;
+      font-weight: 900;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* Parent Section */
+    .parent-zone {
+      background: #fff;
+      border-top: 2px solid #E5E9F2;
+      border-bottom: 2px solid #E5E9F2;
+      padding: 80px 24px;
+    }
+    .section-container { max-width: 1240px; margin: 0 auto; }
+    .zone-badge {
+      background: #EDE9FE;
+      color: #6D28D9;
+      font-weight: 900;
+      font-size: 14px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .zone-title {
+      font-size: 42px;
+      font-weight: 1000;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .parent-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 40px;
+    }
+    .parent-card {
+      background: #F8FAFC;
+      border: 3px solid #E2E8F0;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: 0 8px 0 #CBD5E1;
+    }
+    .parent-point {
+      display: flex;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .point-num {
+      width: 36px;
+      height: 36px;
+      background: var(--duo-blue);
+      color: #fff;
+      font-weight: 1000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 0 var(--duo-blue-dark);
+    }
+    .point-content h4 { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+    .point-content p { font-size: 15px; color: var(--text-muted); font-weight: 700; }
+    .ui-showcase {
+      background: #F1F5F9;
+      border: 3px solid #CBD5E1;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.08), 0 6px 0 #94A3B8;
+    }
+    .ui-showcase img { width: 100%; height: auto; display: block; }
+
+    /* Challenge Room & Podium */
+    .podium-section {
+      padding: 80px 24px;
+      background: #FAFBFD;
+    }
+    .podium-stage-card {
+      background: #fff;
+      border: 3px solid #E2E8F0;
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: 0 12px 0 #E2E8F0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 36px;
+    }
+    
+    /* 3D Podium Pillars */
+    .podium-3d-box {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 14px;
+      height: 290px;
+      padding-bottom: 10px;
+    }
+    .pillar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 105px;
+    }
+    .pillar-avatar-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #CBD5E1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 0 #94A3B8;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .pillar-col.p-first .pillar-avatar-badge {
+      width: 72px;
+      height: 72px;
+      font-size: 34px;
+      border-color: var(--duo-yellow-dark);
+      background: #FFFBEB;
+      box-shadow: 0 6px 0 var(--duo-yellow-dark);
+    }
+    .crown-gold {
+      position: absolute;
+      top: -20px;
+      font-size: 24px;
+    }
+    .pillar-name { font-size: 15px; font-weight: 1000; margin-bottom: 2px; }
+    .pillar-score { font-size: 13px; font-weight: 900; color: #64748B; margin-bottom: 8px; }
+    .pillar-block {
+      width: 100%;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 1000;
+      font-size: 32px;
+      color: #fff;
+    }
+    .pillar-col.p-second .pillar-block {
+      height: 140px;
+      background: linear-gradient(180deg, #94A3B8, #64748B);
+      box-shadow: 0 8px 0 #475569;
+    }
+    .pillar-col.p-first .pillar-block {
+      height: 190px;
+      background: linear-gradient(180deg, #FFC800, #F59E0B);
+      box-shadow: 0 8px 0 #D97706;
+      color: #78350F;
+    }
+    .pillar-col.p-third .pillar-block {
+      height: 100px;
+      background: linear-gradient(180deg, #F97316, #EA580C);
+      box-shadow: 0 8px 0 #C2410C;
+    }
+
+    /* List rows with Duolingo-style positive feedback */
+    .runner-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .runner-item {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.1s;
+    }
+    .runner-item:hover {
+      transform: translateX(4px);
+      border-color: var(--duo-blue);
+    }
+    .runner-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .runner-rank {
+      font-weight: 1000;
+      font-size: 16px;
+      color: #64748B;
+      width: 24px;
+    }
+    .runner-name { font-weight: 900; font-size: 16px; }
+    .badge-delta {
+      background: #DCFCE7;
+      color: #15803D;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .badge-rocket {
+      background: #FEF3C7;
+      color: #B45309;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .runner-points {
+      font-weight: 1000;
+      font-size: 17px;
+      color: var(--kahoot-blue);
+    }
+
+    /* Books grid */
+    .books-section {
+      padding: 80px 24px;
+      background: #fff;
+    }
+    .books-shelf {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .book-card-3d {
+      background: #fff;
+      border: 3px solid #E2E8F0;
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: 0 8px 0 #CBD5E1;
+      transition: all 0.15s;
+    }
+    .book-card-3d:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 0 #94A3B8;
+      border-color: var(--duo-green);
+    }
+    .book-cover-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .book-card-title { font-size: 18px; font-weight: 1000; margin-bottom: 4px; }
+    .book-card-info { font-size: 13px; font-weight: 800; color: var(--text-muted); }
+
+    /* FAQ */
+    .faq-container {
+      max-width: 900px;
+      margin: 60px auto 40px;
+      padding: 0 24px;
+    }
+    .faq-box {
+      background: #F8FAFC;
+      border: 2px solid #E2E8F0;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .faq-title { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+    .faq-body { font-size: 15px; font-weight: 700; color: var(--text-muted); }
+
+    .disclaimer-pill {
+      background: #FEF2F2;
+      border: 2px solid #FECACA;
+      color: #991B1B;
+      padding: 18px 24px;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 14px;
+      margin-top: 32px;
+    }
+
+    footer {
+      background: #1E293B;
+      color: #94A3B8;
+      padding: 36px 24px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo-group">
+        <div class="logo-icon-wrap">📖</div>
+        <div class="logo-title">ReadQuest</div>
+      </a>
+      <div class="nav-menu">
+        <a href="#challenge" class="nav-item">🎮 挑战房</a>
+        <a href="#parents" class="nav-item">👨‍👩‍👧 家长学情看板</a>
+        <a href="#leaderboard" class="nav-item">🏆 本周领奖台</a>
+        <a href="#books" class="nav-item">📚 书目库</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div class="streak-nav-pill">
+          <span>🔥</span>
+          <span>5 天连胜</span>
+        </div>
+        <a href="/login" class="btn-3d btn-green" style="padding: 10px 20px; font-size: 15px;">登录挑战</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="hero-wrap">
+    <div class="hero-left">
+      <div class="badge-pill">
+        <span>⚡</span> 全网首个游戏化初中生读书竞技平台
+      </div>
+      <h1 class="hero-heading">
+        加入一场读书挑战，<br>
+        <span class="color-green">证明你真的读懂了！</span>
+      </h1>
+      <p class="hero-sub">
+        像刷 Kahoot 一样答题，像冲 Duolingo 天梯一样打卡。每本书独家精选 50+ 概念侦探题，做对多拿分，碾压全班登顶领奖台！
+      </p>
+
+      <!-- Kahoot PIN Card -->
+      <div class="kahoot-pin-card">
+        <div class="kahoot-shapes">
+          <span class="k-shape k-red"></span>
+          <span class="k-shape k-blue"></span>
+          <span class="k-shape k-yellow"></span>
+          <span class="k-shape k-green"></span>
+        </div>
+        <div class="pin-title">
+          <span>🔑 输入挑战房间 PIN 码（班级/家庭房间）</span>
+        </div>
+        <div class="pin-flex">
+          <input type="text" class="pin-input" placeholder="输入 6 位代码" value="849 203" maxlength="7">
+          <button class="btn-3d btn-blue" onclick="alert('成功进入房间：初二 4 班 Big Fat Science 周末擂台！')">
+            🚀 开始对决
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Character & Mascot Right -->
+    <div class="character-stage">
+      <div class="speech-bubble">
+        “Simon，你排第 1 名还差 60 分，再刷一章《生物细胞》就能反超啦！”
+      </div>
+
+      <div class="mascot-wrapper">
+        <!-- Mascot Booky with happy glasses and trophy -->
+        <svg width="200" height="190" viewBox="0 0 200 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shadow -->
+          <ellipse cx="100" cy="180" rx="60" ry="10" fill="#E2E8F0"/>
+          <!-- Book Outer -->
+          <rect x="35" y="25" width="130" height="145" rx="24" fill="#58CC02"/>
+          <rect x="35" y="25" width="130" height="145" rx="24" stroke="#46A302" stroke-width="4"/>
+          <!-- Book Pages -->
+          <path d="M48 36C48 30 52 28 60 28H140C148 28 152 30 152 36V156C152 160 148 162 140 162H60C52 162 48 160 48 156V36Z" fill="#FFFFFF"/>
+          <path d="M100 28V162" stroke="#E2E8F0" stroke-width="3" stroke-dasharray="3 3"/>
+          <!-- Cute Glasses -->
+          <rect x="58" y="70" width="36" height="36" rx="18" fill="#1CB0F6" stroke="#1899D6" stroke-width="4"/>
+          <rect x="106" y="70" width="36" height="36" rx="18" fill="#1CB0F6" stroke="#1899D6" stroke-width="4"/>
+          <path d="M94 88H106" stroke="#1899D6" stroke-width="4"/>
+          <!-- Eyes -->
+          <circle cx="76" cy="88" r="8" fill="#202738"/>
+          <circle cx="124" cy="88" r="8" fill="#202738"/>
+          <circle cx="79" cy="85" r="3" fill="#FFFFFF"/>
+          <circle cx="127" cy="85" r="3" fill="#FFFFFF"/>
+          <!-- Blushing -->
+          <ellipse cx="60" cy="112" rx="7" ry="4" fill="#FF809B" opacity="0.8"/>
+          <ellipse cx="140" cy="112" rx="7" ry="4" fill="#FF809B" opacity="0.8"/>
+          <!-- Happy Smile -->
+          <path d="M92 114C92 122 108 122 108 114" stroke="#202738" stroke-width="4" stroke-linecap="round"/>
+          <!-- Little Trophy in hand -->
+          <g transform="translate(142, 100)">
+            <path d="M12 8H26C26 18 20 22 19 26H19V32H13V26H13C12 22 6 18 6 8H12Z" fill="#FFC800" stroke="#D97706" stroke-width="2"/>
+            <path d="M6 10C2 10 2 16 6 16" stroke="#D97706" stroke-width="2"/>
+            <path d="M26 10C30 10 30 16 26 16" stroke="#D97706" stroke-width="2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="streak-banner">
+        <span style="font-size: 20px;">🔥</span>
+        <span>已连续打卡 5 天 · 保持连胜可领限定金边徽章！</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Parent Value Proposition Zone -->
+  <section class="parent-zone" id="parents">
+    <div class="section-container">
+      <div class="zone-badge">家长视点 · 告别虚假打卡</div>
+      <h2 class="zone-title">
+        每本书都配有原创检测题，<br>
+        孩子读完不是打卡就算，而是真正证明学会了。
+      </h2>
+      <p style="font-size: 18px; color: var(--text-muted); font-weight: 700; max-width: 680px;">
+        市面上大部分打卡是"拍张照、写两句读后感"。ReadQuest 用严密的概念辨析题，自动定位孩子知识盲区，生成透明量化的学情报告。
+      </p>
+
+      <div class="parent-split">
+        <div class="parent-card">
+          <h3 style="font-size: 22px; font-weight: 1000; margin-bottom: 8px;">🎓 7 大题型全面击穿“假懂”</h3>
+          <p style="font-size: 15px; color: var(--text-muted); font-weight: 700;">
+            每套测验包含单选、正误辨析、分类归纳、词库填空、配对与论述题，彻底检验吸收深度。
+          </p>
+
+          <div class="parent-point">
+            <div class="point-num">1</div>
+            <div class="point-content">
+              <h4>错题自动归纳与考点诊断</h4>
+              <p>系统自动标红薄弱知识点（如"化学方程式配平"、"物理受力图"），让复习有的放矢。</p>
+            </div>
+          </div>
+
+          <div class="parent-point">
+            <div class="point-num">2</div>
+            <div class="point-content">
+              <h4>随时开启家庭/班级挑战房间</h4>
+              <p>老师或家长一键发起房间并分享 6 位 PIN 码，同读一本书，全家全班共同进步。</p>
+            </div>
+          </div>
+
+          <div class="parent-point">
+            <div class="point-num">3</div>
+            <div class="point-content">
+              <h4>周报自动推送与掌握率追踪</h4>
+              <p>每周汇总学生完成章节、平均正确率与进步趋势，随时随地在手机端掌握进度。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ui-showcase">
+          <img src="assets/mvp_home_tab_parent.png" alt="家长学情看板">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Room & 3D Podium -->
+  <section class="podium-section" id="leaderboard">
+    <div class="section-container">
+      <div class="zone-badge" style="background: #FEF3C7; color: #B45309;">每周天梯 · 永不气馁机制</div>
+      <h2 class="zone-title">Challenge Room 本周领奖台</h2>
+      <p style="font-size: 17px; color: var(--text-muted); font-weight: 700;">
+        <b>每周日晚 24:00 重置本周积分！</b>上周考差了这周还能翻盘，所有人都有机会站上 🥇🥈🥉 领奖台。
+      </p>
+
+      <div class="podium-stage-card">
+        <!-- 3D Podium -->
+        <div>
+          <div style="font-weight: 1000; font-size: 19px; margin-bottom: 20px; text-align: center;">
+            🏆 黄金联赛 · 本周前 3 名
+          </div>
+
+          <div class="podium-3d-box">
+            <!-- 2nd -->
+            <div class="pillar-col p-second">
+              <div class="pillar-avatar-badge">🥈</div>
+              <div class="pillar-name">Alex.K</div>
+              <div class="pillar-score">880 分</div>
+              <div class="pillar-block">2</div>
+            </div>
+
+            <!-- 1st -->
+            <div class="pillar-col p-first">
+              <div class="pillar-avatar-badge">
+                <span class="crown-gold">👑</span>
+                🥇
+              </div>
+              <div class="pillar-name">Simon.Z</div>
+              <div class="pillar-score">940 分</div>
+              <div class="pillar-block">1</div>
+            </div>
+
+            <!-- 3rd -->
+            <div class="pillar-col p-third">
+              <div class="pillar-avatar-badge">🥉</div>
+              <div class="pillar-name">Emily.L</div>
+              <div class="pillar-score">810 分</div>
+              <div class="pillar-block">3</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px; text-align: center; font-size: 13px; font-weight: 800; color: #64748B;">
+            ⭐ 积分规则：<code>本周积分 = Σ(正确率 × 题量权重)</code>。做越多、做越准，得分越高！
+          </div>
+        </div>
+
+        <!-- List with Personal Feedback -->
+        <div>
+          <div style="font-weight: 1000; font-size: 18px; margin-bottom: 16px; display: flex; justify-content: space-between;">
+            <span>全员战况 (杜绝垫底放弃)</span>
+            <span style="font-size: 13px; color: var(--duo-blue); font-weight: 900;">查看全部 32 人 →</span>
+          </div>
+
+          <div class="runner-list">
+            <div class="runner-item">
+              <div class="runner-user">
+                <span class="runner-rank">04</span>
+                <span class="runner-name">Leo Huang</span>
+                <span class="badge-delta">较上周 +140 分 📈</span>
+              </div>
+              <div class="runner-points">760 pts</div>
+            </div>
+
+            <div class="runner-item" style="border-color: #FBBF24; background: #FFFBEB;">
+              <div class="runner-user">
+                <span class="runner-rank">05</span>
+                <span class="runner-name">Jessica M.</span>
+                <span class="badge-rocket">🔥 本周进步最快</span>
+              </div>
+              <div class="runner-points">710 pts</div>
+            </div>
+
+            <div class="runner-item">
+              <div class="runner-user">
+                <span class="runner-rank">06</span>
+                <span class="runner-name">David Chen</span>
+                <span class="badge-delta">较上周 +80 分</span>
+              </div>
+              <div class="runner-points">690 pts</div>
+            </div>
+
+            <div class="runner-item">
+              <div class="runner-user">
+                <span class="runner-rank">07</span>
+                <span class="runner-name">Sophie Taylor</span>
+                <span class="badge-delta">较上周 +45 分</span>
+              </div>
+              <div class="runner-points">650 pts</div>
+            </div>
+
+            <div class="runner-item" style="background: #EFF6FF; border-color: #93C5FD;">
+              <div class="runner-user">
+                <span class="runner-rank">15</span>
+                <span class="runner-name">Lucas (你的排位)</span>
+                <span class="badge-delta" style="background: #DBEAFE; color: #1D4ED8;">较上周 +120 分 🌟</span>
+              </div>
+              <div class="runner-points">480 pts</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; padding: 12px; background: #F8FAFC; border-radius: 12px; font-size: 13px; font-weight: 800; color: #475569;">
+            💚 <b>多邻国同款正向激励</b>：无论排在第几名，卡片上都会高亮你的个人努力（“较上周 +120分”），让每个孩子都能看到自己的蜕变！
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Books Section -->
+  <section class="books-section" id="books">
+    <div class="section-container">
+      <div class="zone-badge">覆盖初中主流书单</div>
+      <h2 class="zone-title">经典科普与数理原著，全套自研题库</h2>
+      <p style="font-size: 17px; color: var(--text-muted); font-weight: 700;">
+        每本名著细分章节单元，读完一章立刻挑战一章，循序渐进通关！
+      </p>
+
+      <div class="books-shelf">
+        <div class="book-card-3d">
+          <img src="assets/multibook_science.png" class="book-cover-img" alt="Science">
+          <div class="book-card-title">📗 科学综合 (Science)</div>
+          <div class="book-card-info">49 个章节 · 380 道探究题</div>
+        </div>
+        <div class="book-card-3d">
+          <img src="assets/multibook_biology.png" class="book-cover-img" alt="Biology">
+          <div class="book-card-title">🧬 生物学 (Biology)</div>
+          <div class="book-card-info">50 个章节 · 细胞与遗传学全解析</div>
+        </div>
+        <div class="book-card-3d">
+          <img src="assets/multibook_chemistry.png" class="book-cover-img" alt="Chemistry">
+          <div class="book-card-title">🧪 基础化学 (Chemistry)</div>
+          <div class="book-card-info">36 个章节 · 元素周期律与反应</div>
+        </div>
+        <div class="book-card-3d">
+          <img src="assets/multibook_math.png" class="book-cover-img" alt="Math">
+          <div class="book-card-title">📐 初中数学 (Math)</div>
+          <div class="book-card-info">63 个章节 · 数论、比例与几何</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ & Legal Disclaimer -->
+  <div class="faq-container">
+    <h3 style="font-size: 28px; font-weight: 1000; text-align: center; margin-bottom: 24px;">常见疑问解答</h3>
+
+    <div class="faq-box">
+      <div class="faq-title">Q: 挑战房人数少（比如全家只有3个人）怎么办？</div>
+      <div class="faq-body">A: 小房间自动启用极简排名展示，不展示冗余的段位比例包装，保留最温馨纯粹的家庭同读竞技氛围。</div>
+    </div>
+
+    <div class="faq-box">
+      <div class="faq-title">Q: 孩子乱点答题能蒙混过关吗？</div>
+      <div class="faq-body">A: 积分算法严格绑定“正确率”，盲猜会导致得分大幅折损。同时题目含多道综合论述与归纳题，无法仅凭死记硬背猜中。</div>
+    </div>
+
+    <div class="disclaimer-pill">
+      ⚖️ <b>版权免责声明：</b> ReadQuest 平台所提供之全部题目及测试解析均为本教研团队独立自研编写，旨在培养青少年深度阅读与批判性思维习惯，与原书出版机构、作者及相关版权权利人无商业附属关系。
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 ReadQuest · 真正让初中生自发热爱阅读的竞技乐园</p>
+  </footer>
+
+</body>
+</html>
+"""
+
+with open("readquest/design-demos/direction-2-benchmark-duokahoot.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("Direction 2 built.")

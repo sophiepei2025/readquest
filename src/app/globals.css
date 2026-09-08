@@ -24,3 +24,56 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Duolingo / Kahoot 3D Buttons */
+.btn-3d {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+.btn-3d:active {
+  transform: translateY(4px);
+}
+
+.btn-3d-green {
+  background: #58CC02;
+  color: #fff;
+  box-shadow: 0 6px 0 #46A302;
+}
+.btn-3d-green:active {
+  box-shadow: 0 2px 0 #46A302;
+}
+
+.btn-3d-blue {
+  background: #1CB0F6;
+  color: #fff;
+  box-shadow: 0 6px 0 #1899D6;
+}
+.btn-3d-blue:active {
+  box-shadow: 0 2px 0 #1899D6;
+}
+
+.btn-3d-yellow {
+  background: #FFC800;
+  color: #5B4000;
+  box-shadow: 0 6px 0 #E5A400;
+}
+.btn-3d-yellow:active {
+  box-shadow: 0 2px 0 #E5A400;
+}
+
+@keyframes floatMascot {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: floatMascot 3s ease-in-out infinite;
+}

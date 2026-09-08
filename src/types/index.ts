@@ -247,4 +247,49 @@ export interface QuizAttempt {
   startedAt: string;
   completedAt?: string;
   gradingResult?: GradingResult;
+  periodId?: string; // e.g. "2026-W36"
+}
+
+// ─── Challenge Room & Leaderboard ──────────────────────────────────────────
+
+export interface ChallengeRoom {
+  id: string;
+  name: string;
+  pinCode: string; // 6-digit PIN (e.g. "849203")
+  createdBy: string;
+  targetBookId?: string;
+  createdAt: string;
+}
+
+export interface ChallengeMember {
+  id: string;
+  roomId: string;
+  studentId: string;
+  studentName: string;
+  avatarUrl?: string;
+  weeklyPoints: number;
+  lastWeekPoints: number;
+  updatedAt: string;
+}
+
+export interface LeaderboardMemberItem {
+  studentId: string;
+  studentName: string;
+  avatarUrl?: string;
+  weeklyPoints: number;
+  lastWeekPoints: number;
+  deltaVsLastWeek: number;
+  rank: number;
+  isFastestProgress?: boolean;
+}
+
+export interface LeaderboardData {
+  roomId: string;
+  roomName: string;
+  periodId: string;
+  isSmallRoom: boolean; // < 5 members fallback
+  totalMembers: number;
+  podium: LeaderboardMemberItem[]; // Rank 1, 2, 3
+  runners: LeaderboardMemberItem[]; // Rank 4+
+  lastResetAt?: string;
 }

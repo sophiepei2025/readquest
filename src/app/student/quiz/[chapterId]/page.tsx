@@ -24,7 +24,8 @@ type StudentAnswer = {
 export default function QuizPage({ params }: QuizPageProps) {
   const { chapterId } = use(params);
   const quiz = getQuizByChapterOrUnitId(chapterId);
-  const studentName = "Simon"; // TODO: from auth context
+  const [studentName, setStudentName] = useState("Simon");
+  const [studentId, setStudentId] = useState("stu-simon");
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, unknown>>(new Map());
@@ -33,6 +34,19 @@ export default function QuizPage({ params }: QuizPageProps) {
     typeof gradeQuiz
   > | null>(null);
   const [direction, setDirection] = useState(0); // -1 = prev, 1 = next
+  const [leaderboard, setLeaderboard] = useState<Array<{ rank: number; studentName: string; score: number; totalMarks: number; avatarUrl?: string }>>([]);
+  const [challengeInfo, setChallengeInfo] = useState<{ name: string; inviteCode: string } | null>(null);
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  // Load user session if available
+  useMemo(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("readquest_user");
+      const storedId = localStorage.getItem("readquest_user_id");
+      if (storedName) setStudentName(storedName);
+      if (storedId) setStudentId(storedId);
+    }
+  }, []);
 
   const questions = quiz.questions;
   const currentQuestion = questions[currentIndex];
@@ -63,7 +77,7 @@ export default function QuizPage({ params }: QuizPageProps) {
     []
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const studentAnswers: StudentAnswer[] = questions.map((q) => ({
       questionId: q.id,
       answer: answers.get(q.id) ?? null,
@@ -71,6 +85,40 @@ export default function QuizPage({ params }: QuizPageProps) {
     const result = gradeQuiz(questions, studentAnswers);
     setGradingResult(result);
     setIsSubmitted(true);
+
+    // Filter wrong question IDs for secure personal storage
+    const wrongIds = result.answerGrades.filter((g) => !g.isCorrect).map((g) => g.questionId);
+
+    // Record attempt in Turso database
+    try {
+      await fetch('/api/attempts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId,
+          bookId: quiz.chapterId.startsWith('bio-') ? 'book-biology-ace' : quiz.chapterId.startsWith('chem-') ? 'book-chemistry-ace' : quiz.chapterId.startsWith('math-') ? 'book-math-ace' : quiz.chapterId.startsWith('alg-') ? 'book-algebra-ace' : 'book-science-ace',
+          unitId: quiz.chapterId,
+          score: result.totalScore,
+          totalMarks: result.totalMarks,
+          percentage: result.percentage,
+          wrongQuestionIds: wrongIds,
+          feedbackSummary: {
+            parts: result.parts,
+            weakTags: result.weakKnowledgeTags,
+          },
+        }),
+      });
+
+      // Load Big Fat Challenge Leaderboard
+      const lbRes = await fetch('/api/challenge/challenge-science-7a/leaderboard');
+      const lbData = await lbRes.json();
+      if (lbData.success) {
+        setLeaderboard(lbData.leaderboard);
+        setChallengeInfo(lbData.challenge);
+      }
+    } catch (err) {
+      console.error('Failed to sync quiz attempt:', err);
+    }
   };
 
   const goTo = (idx: number) => {
@@ -179,6 +227,84 @@ export default function QuizPage({ params }: QuizPageProps) {
           </div>
         )}
 
+        {/* Big Fat Challenge Leaderboard Card */}
+        <div className="rounded-3xl border border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 p-6 dark:border-amber-800 dark:bg-slate-900 shadow-md">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-amber-200/60 pb-4 dark:border-amber-900/40">
+            <div className="flex items-center gap-2.5">
+              <span className="text-2xl">🏆</span>
+              <div>
+                <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-base">
+                  Big Fat Challenge · 班级答题挑战榜
+                </h3>
+                <p className="text-xs text-amber-900/70 dark:text-amber-300">
+                  当前房间：{challengeInfo?.name || "7th Grade Science Squad 🏆"}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                const code = challengeInfo?.inviteCode || "SCIENCE7";
+                navigator.clipboard.writeText(code);
+                setCopiedCode(true);
+                setTimeout(() => setCopiedCode(false), 2000);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-amber-300 bg-white px-3 py-1.5 text-xs font-bold text-amber-900 hover:bg-amber-100/60 dark:border-amber-700 dark:bg-slate-800 dark:text-amber-200 transition-all active:scale-95"
+            >
+              <span>🔑 邀请码: {challengeInfo?.inviteCode || "SCIENCE7"}</span>
+              <span>{copiedCode ? "✓ 已复制" : "📋 复制"}</span>
+            </button>
+          </div>
+
+          {/* Rankings list */}
+          <div className="mt-4 space-y-2">
+            {(leaderboard.length > 0 ? leaderboard : [
+              { rank: 1, studentName: "Leo M.", score: 48, totalMarks: 50, avatarUrl: "L" },
+              { rank: 2, studentName: studentName, score: gradingResult.totalScore, totalMarks: gradingResult.totalMarks, avatarUrl: "S" },
+              { rank: 3, studentName: "Emma W.", score: 46, totalMarks: 50, avatarUrl: "E" },
+              { rank: 4, studentName: "Sophia T.", score: 42, totalMarks: 50, avatarUrl: "T" },
+              { rank: 5, studentName: "Lucas K.", score: 38, totalMarks: 50, avatarUrl: "K" },
+            ]).slice(0, 5).map((item, idx) => {
+              const isCurrent = item.studentName.includes(studentName) || item.studentName === studentName;
+              return (
+                <div
+                  key={idx}
+                  className={`flex items-center justify-between p-3 rounded-2xl transition-all ${
+                    isCurrent
+                      ? "border-2 border-blue-500 bg-blue-50/80 shadow-sm dark:bg-blue-950/40"
+                      : "border border-amber-200/40 bg-white/80 dark:border-slate-800 dark:bg-slate-800/80"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`w-6 text-center font-extrabold text-sm ${
+                      item.rank === 1 ? "text-amber-500 text-lg" : item.rank === 2 ? "text-slate-400 text-base" : item.rank === 3 ? "text-amber-700 text-base" : "text-slate-400"
+                    }`}>
+                      {item.rank === 1 ? "🥇" : item.rank === 2 ? "🥈" : item.rank === 3 ? "🥉" : `#${item.rank}`}
+                    </span>
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+                      {item.avatarUrl || item.studentName[0]}
+                    </span>
+                    <span className={`text-sm font-bold ${isCurrent ? "text-blue-700 dark:text-blue-300" : "text-slate-800 dark:text-slate-200"}`}>
+                      {item.studentName} {isCurrent && <span className="text-[10px] bg-blue-100 px-1.5 py-0.5 rounded text-blue-700 font-semibold ml-1">你</span>}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm font-extrabold text-slate-900 dark:text-slate-100">
+                      {item.score}
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium"> / {item.totalMarks} 分</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Privacy Reassurance Note */}
+          <div className="mt-4 flex items-center gap-1.5 text-[11px] text-amber-900/80 dark:text-amber-300/80 bg-amber-100/50 dark:bg-amber-950/30 p-2.5 rounded-xl">
+            <span>🔒</span>
+            <span>隐私守护：排行榜接口仅对受邀成员展示总分与名次，你的错题与解析细节仅自己与家长可见。</span>
+          </div>
+        </div>
+
         {/* Actions */}
         <div className="flex gap-3">
           <button
@@ -284,10 +410,9 @@ export default function QuizPage({ params }: QuizPageProps) {
         {currentIndex === questions.length - 1 ? (
           <button
             onClick={handleSubmit}
-            disabled={answeredCount < questions.length}
-            className="rounded-2xl bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-green-700 disabled:opacity-50 active:scale-[0.98]"
+            className="rounded-2xl bg-green-600 px-5 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-green-700 active:scale-[0.98]"
           >
-            ✅ 提交
+            {answeredCount < questions.length ? `✅ 提交答卷 (${answeredCount}/${questions.length})` : "✅ 提交答卷"}
           </button>
         ) : (
           <button

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReadQuest - 青年阅读竞技天梯 · 证明你的硬实力</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800;900&family=Space+Grotesk:wght@600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0A0D14;
+      --bg-card: #121826;
+      --bg-card-hover: #182236;
+      --cyan: #00F0FF;
+      --gold: #FFB800;
+      --purple: #8B5CF6;
+      --pink: #FF2E7E;
+      --green: #10B981;
+      --text-main: #F1F5F9;
+      --text-sub: #94A3B8;
+      --border-hud: rgba(0, 240, 255, 0.25);
+      --glow-cyan: 0 0 25px rgba(0, 240, 255, 0.35);
+      --glow-gold: 0 0 25px rgba(255, 184, 0, 0.35);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Esports HUD Cut Corner Container */
+    .hud-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hud);
+      position: relative;
+      clip-path: polygon(
+        0 14px, 14px 0,
+        calc(100% - 14px) 0, 100% 14px,
+        100% calc(100% - 14px), calc(100% - 14px) 100%,
+        14px 100%, 0 calc(100% - 14px)
+      );
+    }
+    .hud-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    /* Nav */
+    nav {
+      max-width: 1280px;
+      margin: 20px auto;
+      padding: 16px 28px;
+      background: rgba(18, 24, 38, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+    .logo-diamond {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #000;
+      font-size: 16px;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    }
+    .logo-brand {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .logo-brand span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      transition: color 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .nav-a:hover { color: var(--cyan); }
+    .btn-hud-login {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      padding: 10px 22px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+      transition: all 0.2s;
+    }
+    .btn-hud-login:hover {
+      background: var(--cyan);
+      color: #000;
+      box-shadow: var(--glow-cyan);
+    }
+
+    /* Hero */
+    .hero-container {
+      max-width: 1280px;
+      margin: 50px auto 80px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .season-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      border: 1px solid rgba(255, 184, 0, 0.3);
+      background: rgba(255, 184, 0, 0.08);
+      padding: 6px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    .hero-title {
+      font-size: 56px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+    }
+    .glow-text {
+      background: linear-gradient(135deg, #FFF 20%, var(--cyan) 80%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-text {
+      background: linear-gradient(135deg, #FFF 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-sub);
+      max-width: 580px;
+      margin-bottom: 36px;
+      line-height: 1.6;
+    }
+
+    /* Esports Room Key Input */
+    .room-entry-card {
+      background: #111726;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.08);
+      position: relative;
+    }
+    .entry-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .entry-flex {
+      display: flex;
+      gap: 12px;
+    }
+    .room-input {
+      flex: 1;
+      background: #080C14;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .room-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+    .btn-enter-room {
+      background: linear-gradient(135deg, var(--cyan), #00A3FF);
+      color: #000;
+      font-weight: 900;
+      font-size: 16px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .btn-enter-room:hover {
+      box-shadow: var(--glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    /* Right Mascot & Rank Hologram */
+    .hologram-stage {
+      background: radial-gradient(circle at center, rgba(139, 92, 246, 0.15) 0%, rgba(18, 24, 38, 0.9) 70%);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .hologram-scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 240, 255, 0.03) 4px);
+      pointer-events: none;
+    }
+    .tier-badge {
+      display: inline-block;
+      background: rgba(255, 184, 0, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 4px 16px;
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    .streak-hud-row {
+      display: flex;
+      justify-content: space-around;
+      background: #0D121F;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .streak-hud-item strong { display: block; font-size: 20px; color: var(--gold); }
+    .streak-hud-item span { font-size: 12px; color: var(--text-sub); }
+
+    /* Parent Section */
+    .section-parent-hud {
+      padding: 90px 24px;
+      background: #0E1321;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .container { max-width: 1280px; margin: 0 auto; }
+    .hud-tag {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .hud-title {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .parent-grid-hud {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 40px;
+    }
+    .metric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .metric-item {
+      background: var(--bg-card);
+      border-left: 3px solid var(--cyan);
+      padding: 20px 24px;
+      border-radius: 0 12px 12px 0;
+    }
+    .metric-item h4 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .metric-item p { font-size: 14px; color: var(--text-sub); }
+    .parent-img-wrap {
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .parent-img-wrap img { width: 100%; height: auto; display: block; }
+
+    /* Challenge Room & Esports Podium */
+    .section-podium-hud {
+      padding: 90px 24px;
+    }
+    .podium-esports-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .podium-esports-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 36px 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    .esports-pillars {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 16px;
+      height: 280px;
+      margin: 20px 0;
+    }
+    .p-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 110px;
+    }
+    .p-head {
+      width: 58px;
+      height: 58px;
+      border-radius: 12px;
+      background: #1B2338;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .p-col.gold .p-head {
+      width: 72px;
+      height: 72px;
+      font-size: 36px;
+      border-color: var(--gold);
+      box-shadow: var(--glow-gold);
+    }
+    .crown-holo { position: absolute; top: -18px; font-size: 22px; }
+    .p-handle { font-weight: 800; font-size: 15px; margin-bottom: 2px; }
+    .p-pts { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-sub); margin-bottom: 8px; }
+    .p-bar {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 900;
+      font-size: 28px;
+      position: relative;
+    }
+    .p-col.silver .p-bar { height: 130px; background: linear-gradient(180deg, #64748B, #334155); color: #94A3B8; }
+    .p-col.gold .p-bar { height: 180px; background: linear-gradient(180deg, #FFB800, #B45309); color: #000; }
+    .p-col.bronze .p-bar { height: 95px; background: linear-gradient(180deg, #EA580C, #7C2D12); color: #FDBA74; }
+
+    /* Ladder List */
+    .ladder-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ladder-row {
+      background: #0C101A;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 12px 18px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: border-color 0.2s;
+    }
+    .ladder-row:hover { border-color: var(--cyan); }
+    .ladder-left { display: flex; align-items: center; gap: 14px; }
+    .ladder-rank { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--cyan); width: 28px; }
+    .ladder-name { font-weight: 700; font-size: 15px; }
+    .tag-delta-green {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .tag-delta-star {
+      background: rgba(255, 184, 0, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .ladder-score { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #fff; font-size: 16px; }
+
+    /* Books */
+    .section-books-hud {
+      padding: 80px 24px;
+      background: #080B12;
+    }
+    .book-cards-hud {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 36px;
+    }
+    .book-hud-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      transition: all 0.2s;
+    }
+    .book-hud-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--cyan);
+      box-shadow: 0 10px 25px rgba(0, 240, 255, 0.15);
+    }
+    .book-hud-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+    .book-hud-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .book-hud-info { font-size: 13px; color: var(--text-sub); }
+
+    /* FAQ */
+    .faq-hud-wrap {
+      max-width: 900px;
+      margin: 80px auto 40px;
+      padding: 0 24px;
+    }
+    .faq-item-hud {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .faq-q-hud { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .faq-a-hud { font-size: 14px; color: var(--text-sub); line-height: 1.6; }
+    .disclaimer-hud {
+      margin-top: 32px;
+      background: rgba(255, 46, 126, 0.08);
+      border: 1px solid rgba(255, 46, 126, 0.3);
+      color: #FFA5C3;
+      padding: 16px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 24px;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="logo-block">
+      <div class="logo-diamond">RQ</div>
+      <div class="logo-brand">READ<span>QUEST</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="#arena" class="nav-a">01 // 挑战大厅</a>
+      <a href="#parent" class="nav-a">02 // 家长学情HUD</a>
+      <a href="#ladder" class="nav-a">03 // 天梯榜</a>
+      <a href="#books" class="nav-a">04 // 经典题库</a>
+    </div>
+    <a href="/login" class="btn-hud-login">终端登录</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-container" id="arena">
+    <div>
+      <div class="season-tag">
+        <span>⚡ S3 赛季</span> // 读书竞技公开赛 · 全网实时排位
+      </div>
+      <h1 class="hero-title">
+        加入一场读书挑战，<br>
+        <span class="glow-text">证明你真的读懂了！</span>
+      </h1>
+      <p class="hero-desc">
+        将《Big Fat Notebook》等权威学术与科普原著转化为电竞级答题对决。告别形式主义打卡，用真实正确率与战术答题速度，向全校第一发起冲击！
+      </p>
+
+      <!-- Esports PIN Box -->
+      <div class="room-entry-card">
+        <div class="entry-label">
+          <span>// CHALLENGE_ROOM_AUTH</span>
+          <span>PIN_CODE_REQUIRED</span>
+        </div>
+        <div class="entry-flex">
+          <input type="text" class="room-input" placeholder="000 000" value="902 114" maxlength="7">
+          <button class="btn-enter-room" onclick="alert('进入挑战房间 [902114]：初二代数斜率与一次方程组对决！')">
+            进入房间
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Holographic Mascot & Stats -->
+    <div class="hologram-stage">
+      <div class="hologram-scanline"></div>
+      <div class="tier-badge">DIAMOND I · 赛季段位钻石</div>
+
+      <!-- Cyber Booky SVG -->
+      <svg width="220" height="190" viewBox="0 0 220 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="cyberBook" x1="0" y1="0" x2="220" y2="190" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#00F0FF"/>
+            <stop offset="1" stop-color="#8B5CF6"/>
+          </linearGradient>
+        </defs>
+        <!-- Futuristic Cut Frame -->
+        <rect x="45" y="25" width="130" height="145" rx="14" fill="#121826" stroke="url(#cyberBook)" stroke-width="3"/>
+        <path d="M55 40H165V155H55V40Z" fill="#0C101A"/>
+        <!-- Cyber Visor / HUD Eyewear -->
+        <rect x="58" y="72" width="104" height="34" rx="8" fill="rgba(0, 240, 255, 0.15)" stroke="#00F0FF" stroke-width="2"/>
+        <line x1="110" y1="72" x2="110" y2="106" stroke="#00F0FF" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="82" cy="89" r="6" fill="#00F0FF"/>
+        <circle cx="138" cy="89" r="6" fill="#00F0FF"/>
+        <!-- Cyber Antenna / Core -->
+        <path d="M110 25V10M102 10H118" stroke="#00F0FF" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Audio waves -->
+        <path d="M30 89C30 75 36 68 40 65" stroke="#8B5CF6" stroke-width="2"/>
+        <path d="M190 89C190 75 184 68 180 65" stroke="#8B5CF6" stroke-width="2"/>
+      </svg>
+
+      <div class="streak-hud-row">
+        <div class="streak-hud-item">
+          <strong>5 DAYS</strong>
+          <span>连续打卡</span>
+        </div>
+        <div class="streak-hud-item">
+          <strong>94.2%</strong>
+          <span>历史平均正确率</span>
+        </div>
+        <div class="streak-hud-item">
+          <strong>#01</strong>
+          <span>全班排位</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Parent Value Section -->
+  <section class="section-parent-hud" id="parent">
+    <div class="container">
+      <div class="hud-tag">// PARENT_ANALYTICS_DASHBOARD</div>
+      <h2 class="hud-title">
+        每本书都配有原创检测题，<br>
+        孩子读完不是打卡就算，而是真正证明学会了。
+      </h2>
+      <p style="color: var(--text-sub); max-width: 680px; font-size: 16px;">
+        从阅读泛泛而过，到知识点精准掌握。ReadQuest 针对每章自主研发 7 类核心思维辨析题，自动生成错题分类与薄弱知识点雷达。
+      </p>
+
+      <div class="parent-grid-hud">
+        <div class="metric-list">
+          <div class="metric-item">
+            <h4>01 // 原创思维检测题库</h4>
+            <p>基于知识逻辑图谱独立原创，考察“概念迁移”与“反例辨析”，杜绝网上抄答案与死记硬背。</p>
+          </div>
+          <div class="metric-item" style="border-left-color: var(--gold);">
+            <h4>02 // 错题考点自动诊断</h4>
+            <p>智能归纳错误类型（如“受力平衡变量判断”、“周期律价电子”），一键导出针对性复习单。</p>
+          </div>
+          <div class="metric-item" style="border-left-color: var(--purple);">
+            <h4>03 // 班级/家庭协同对决房间</h4>
+            <p>家长与老师可自定房间范围，邀请成员同步挑战指定书目章节，每周查看全员学术成长曲线。</p>
+          </div>
+        </div>
+
+        <div class="parent-img-wrap">
+          <img src="assets/mvp_home_tab_parent.png" alt="家长学情看板真实截图">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenge Room & Podium -->
+  <section class="section-podium-hud" id="ladder">
+    <div class="container">
+      <div class="hud-tag">// WEEKLY_CHALLENGE_LADDER</div>
+      <h2 class="hud-title">Challenge Room 每周赛事天梯</h2>
+      <p style="color: var(--text-sub); font-size: 16px;">
+        <b>每周日 24:00 归档并清零本周积分！</b> 算法机制：<code>本周积分 = Σ(测验正确率 × 题量权重)</code>，兼顾数量与质量，落后学员随时可翻盘。
+      </p>
+
+      <div class="podium-esports-grid">
+        <!-- Podium -->
+        <div class="podium-esports-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
+            <span style="font-weight: 800; font-size: 17px; color: #fff;">🏆 本周总榜前三席</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold);">CYCLE #38</span>
+          </div>
+
+          <div class="esports-pillars">
+            <!-- 2nd -->
+            <div class="p-col silver">
+              <div class="p-head">🥈</div>
+              <div class="p-handle">Alex.K</div>
+              <div class="p-pts">880 PTS</div>
+              <div class="p-bar">2</div>
+            </div>
+
+            <!-- 1st -->
+            <div class="p-col gold">
+              <div class="p-head">
+                <span class="crown-holo">👑</span>
+                🥇
+              </div>
+              <div class="p-handle">Simon.Z</div>
+              <div class="p-pts">940 PTS</div>
+              <div class="p-bar">1</div>
+            </div>
+
+            <!-- 3rd -->
+            <div class="p-col bronze">
+              <div class="p-head">🥉</div>
+              <div class="p-handle">Emily.L</div>
+              <div class="p-pts">810 PTS</div>
+              <div class="p-bar">3</div>
+            </div>
+          </div>
+
+          <div style="text-align: center; font-size: 13px; color: var(--text-sub); font-family: 'JetBrains Mono', monospace;">
+            // TOP 3 PLAYERS RECEIVE SEASON GOLD BADGES
+          </div>
+        </div>
+
+        <!-- Personal Feedback List -->
+        <div class="podium-esports-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <span style="font-weight: 800; font-size: 17px;">全员个人突破反馈</span>
+            <span style="font-size: 13px; color: var(--cyan); cursor: pointer;">展开全量天梯 →</span>
+          </div>
+
+          <div class="ladder-rows">
+            <div class="ladder-row">
+              <div class="ladder-left">
+                <span class="ladder-rank">#04</span>
+                <span class="ladder-name">Leo Huang</span>
+                <span class="tag-delta-green">较上周 +140 PTS</span>
+              </div>
+              <span class="ladder-score">760</span>
+            </div>
+
+            <div class="ladder-row" style="border-color: rgba(255, 184, 0, 0.4);">
+              <div class="ladder-left">
+                <span class="ladder-rank">#05</span>
+                <span class="ladder-name">Jessica M.</span>
+                <span class="tag-delta-star">🔥 进步最快黑马</span>
+              </div>
+              <span class="ladder-score">710</span>
+            </div>
+
+            <div class="ladder-row">
+              <div class="ladder-left">
+                <span class="ladder-rank">#06</span>
+                <span class="ladder-name">David Chen</span>
+                <span class="tag-delta-green">较上周 +80 PTS</span>
+              </div>
+              <span class="ladder-score">690</span>
+            </div>
+
+            <div class="ladder-row">
+              <div class="ladder-left">
+                <span class="ladder-rank">#07</span>
+                <span class="ladder-name">Sophie Taylor</span>
+                <span class="tag-delta-green">较上周 +45 PTS</span>
+              </div>
+              <span class="ladder-score">650</span>
+            </div>
+
+            <div class="ladder-row" style="border-color: var(--cyan); background: rgba(0, 240, 255, 0.05);">
+              <div class="ladder-left">
+                <span class="ladder-rank">#15</span>
+                <span class="ladder-name">Lucas (你的排位)</span>
+                <span class="tag-delta-green" style="background: rgba(0, 240, 255, 0.2); color: var(--cyan); border-color: var(--cyan);">较上周 +120 PTS 🚀</span>
+              </div>
+              <span class="ladder-score">480</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 20px; font-size: 13px; color: var(--text-sub); border: 1px dashed rgba(255,255,255,0.15); padding: 12px; border-radius: 8px;">
+            🛡️ <b>竞技心理学设计</b>：即使排位靠后，醒目的成长增量标签让你始终对每一次测验充满期待与尊严感。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Books Section -->
+  <section class="section-books-hud" id="books">
+    <div class="container">
+      <div class="hud-tag">// CURATED_ACADEMIC_TITLES</div>
+      <h2 class="hud-title">全球中学生必读经典书目题库</h2>
+      <p style="color: var(--text-sub); font-size: 16px;">
+        从国际经典科普《Big Fat Notebook》到代数与微积分先导，题库全面覆盖。
+      </p>
+
+      <div class="book-cards-hud">
+        <div class="book-hud-item">
+          <img src="assets/multibook_science.png" class="book-hud-img" alt="Science">
+          <div class="book-hud-title">📗 Science 科学综合</div>
+          <div class="book-hud-info">49 章节完整全覆盖 · 实验与逻辑归纳</div>
+        </div>
+        <div class="book-hud-item">
+          <img src="assets/multibook_biology.png" class="book-hud-img" alt="Biology">
+          <div class="book-hud-title">🧬 Biology 生物全书</div>
+          <div class="book-hud-info">细胞能量转化、基因与生命周期深度测试</div>
+        </div>
+        <div class="book-hud-item">
+          <img src="assets/multibook_chemistry.png" class="book-hud-img" alt="Chemistry">
+          <div class="book-hud-title">🧪 Chemistry 化学基础</div>
+          <div class="book-hud-info">原子周期律、化学方程式配平与计算</div>
+        </div>
+        <div class="book-hud-item">
+          <img src="assets/multibook_math.png" class="book-hud-img" alt="Math">
+          <div class="book-hud-title">📐 Math 初中数学</div>
+          <div class="book-hud-info">有理数、几何比例与一次方程挑战</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ & Legal Disclaimer -->
+  <div class="faq-hud-wrap">
+    <h3 style="font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 24px;">FAQ // 常见疑问解答</h3>
+
+    <div class="faq-item-hud">
+      <div class="faq-q-hud">Q: 小班级或家庭房间（少于5人）如何显示？</div>
+      <div class="faq-a-hud">A: 系统自动启用轻量级排名列表，不展示虚假段位包装，纯粹回归家庭伴读与好友切磋乐趣。</div>
+    </div>
+
+    <div class="faq-item-hud">
+      <div class="faq-q-hud">Q: 如何防止学生靠盲猜选项刷分？</div>
+      <div class="faq-a-hud">A: 积分算法为“正确率 × 题量权重”，答错会严重摊薄单次测验得分。配合综合论述与归纳题，盲猜毫无竞技优势。</div>
+    </div>
+
+    <div class="disclaimer-hud">
+      ⚖️ <b>版权与法律声明：</b> ReadQuest 平台所用检测题均为教研团队独立自研原创，旨在辅助中学生阅读与自主学习，与原书作者、出版机构无商业附属与代言关系。
+    </div>
+  </div>
+
+  <footer>
+    READQUEST ARENA // 2026 PROUDLY DESIGNED FOR NEXT-GEN THINKERS
+  </footer>
+
+</body>
+</html>
