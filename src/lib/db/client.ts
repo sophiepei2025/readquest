@@ -10,13 +10,17 @@
 
 import { createClient } from '@libsql/client';
 
+const defaultDbUrl = process.env.VERCEL ? 'file:/tmp/readquest.db' : 'file:local.db';
+const dbUrl = process.env.TURSO_DATABASE_URL || defaultDbUrl;
+
 if (!process.env.TURSO_DATABASE_URL) {
   console.warn(
-    '⚠️  TURSO_DATABASE_URL not set. Using local SQLite file: file:local.db'
+    `⚠️  TURSO_DATABASE_URL not set. Using local SQLite file: ${dbUrl}`
   );
 }
 
 export const tursoClient = createClient({
-  url: process.env.TURSO_DATABASE_URL ?? 'file:local.db',
+  url: dbUrl,
   authToken: process.env.TURSO_AUTH_TOKEN,
 });
+
