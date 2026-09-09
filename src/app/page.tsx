@@ -56,6 +56,7 @@ const FEATURED_BOOKS: BookCardItem[] = [
 export default function HomePage() {
   const [heroPin, setHeroPin] = useState("849203");
   const [selectedBook, setSelectedBook] = useState<BookCardItem | null>(null);
+  const [modeStep, setModeStep] = useState<"hidden" | "select" | "solo-books">("hidden");
 
   const handleHeroJoin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,12 +102,12 @@ export default function HomePage() {
               <span>5 天连胜</span>
             </div>
 
-            <Link
-              href="/login"
+            <button
+              onClick={() => setModeStep("select")}
               className="btn-3d btn-3d-green px-4 py-2 text-xs sm:text-sm rounded-xl"
             >
-              登录挑战
-            </Link>
+              开始挑战
+            </button>
           </div>
         </div>
       </header>
@@ -116,17 +117,13 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Hero Left Copy & PIN Card */}
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 font-black text-xs px-3.5 py-1.5 rounded-full border-2 border-blue-200 mb-5">
-              <span>⚡</span> 全网首个游戏化初中生读书竞技平台
-            </div>
-
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.15] tracking-tight mb-5">
               加入一场读书挑战，<br />
               <span className="text-[#58CC02]">证明你真的读懂了！</span>
             </h1>
 
             <p className="text-base sm:text-lg font-bold text-slate-600 leading-relaxed max-w-xl mb-8">
-              像刷 Kahoot 一样对决，像冲 Duolingo 天梯一样打卡。每本书独家原创 50+ 概念侦探题，做对多拿分，碾压全场登顶全校领奖台！
+              完成章节对决，凭借正确率斩获积分，登顶每周班级竞技房领奖台！
             </p>
 
             {/* Kahoot PIN Entry Box */}
@@ -159,8 +156,7 @@ export default function HomePage() {
                   🚀 开始对决
                 </button>
               </form>
-              <div className="mt-2.5 flex items-center justify-between text-xs font-bold text-slate-400">
-                <span>💡 体验码：849203 (初二4班) 或 792401 (全国赛)</span>
+              <div className="mt-2.5 flex items-center justify-end text-xs font-bold text-slate-400">
                 <a href="#leaderboard-zone" className="text-blue-500 hover:underline">
                   查看当前房间天梯 ↓
                 </a>
@@ -213,7 +209,7 @@ export default function HomePage() {
               {/* Streak Alert Card */}
               <div className="bg-[#FF9600] text-white p-3.5 rounded-2xl shadow-[0_5px_0_#D97706] font-black text-sm flex items-center justify-center gap-2.5">
                 <span className="text-xl">🔥</span>
-                <span>已连续打卡 5 天 · 保持连胜可获限定金边徽章！</span>
+                <span>已连续打卡 5 天 · 今日继续保持！</span>
               </div>
             </div>
           </div>
@@ -225,14 +221,13 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="max-w-2xl">
             <span className="bg-purple-100 text-purple-700 font-black text-xs px-3.5 py-1.5 rounded-full border-2 border-purple-200 inline-block mb-3">
-              家长视点 · 告别虚假打卡
+              家长视点
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight tracking-tight mb-4">
-              每本书都配有原创检测题，<br />
-              孩子读完不是打卡就算，而是真正证明学会了。
+              真正读懂，数据看得见。
             </h2>
             <p className="text-base font-bold text-slate-500 leading-relaxed">
-              市面上大部分打卡是“拍张照、摘抄两句”。ReadQuest 用高辨析度的思维概念题，自动定位孩子逻辑盲区，生成透明量化的全科看板。
+              配备自研章节深度探究题，穿透表面阅读，自动生成清晰透明的学情轨迹。
             </p>
           </div>
 
@@ -246,10 +241,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h4 className="font-black text-lg text-slate-800 mb-1">
-                      7 大题型全面击穿“假懂”
+                      概念盲区智能诊断
                     </h4>
                     <p className="text-xs sm:text-sm font-bold text-slate-500 leading-relaxed">
-                      涵盖单选、正误辨析、分类归纳、词库填空、配对与综合论述题，绝非死记硬背。
+                      自动标记章节薄弱考点，靶向查漏补缺，复习不再盲目。
                     </p>
                   </div>
                 </div>
@@ -262,10 +257,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h4 className="font-black text-lg text-slate-800 mb-1">
-                      错题考点自动诊断
+                      班级与家庭竞技房间
                     </h4>
                     <p className="text-xs sm:text-sm font-bold text-slate-500 leading-relaxed">
-                      系统自动标红薄弱知识点（如“受力平衡变量判断”、“周期律价电子”），复习不再盲目。
+                      随时一键开启挑战房，设定阅读进度，激发同伴良性竞争。
                     </p>
                   </div>
                 </div>
@@ -278,10 +273,10 @@ export default function HomePage() {
                   </div>
                   <div>
                     <h4 className="font-black text-lg text-slate-800 mb-1">
-                      随时开启家庭/班级挑战房间
+                      全科成长趋势分析
                     </h4>
                     <p className="text-xs sm:text-sm font-bold text-slate-500 leading-relaxed">
-                      家长或老师可一键开房，设置本周必读书目，每周自动推送全员正确率与掌握度报告。
+                      实时掌握正确率轨迹、做题速度与完成度，省心免催促。
                     </p>
                   </div>
                 </div>
@@ -297,9 +292,6 @@ export default function HomePage() {
                   className="w-full h-auto rounded-2xl object-cover transition-transform group-hover:scale-[1.01]"
                 />
               </div>
-              <div className="mt-3 text-center text-xs font-black text-slate-400">
-                ▲ 真实系统学情看板截图 · 实时掌握章节完成度、平均分与错题考点分类
-              </div>
             </div>
           </div>
         </div>
@@ -310,14 +302,11 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="bg-amber-100 text-amber-800 font-black text-xs px-3.5 py-1.5 rounded-full border-2 border-amber-300 inline-block mb-3">
-              每周天梯 · 永不气馁机制
+              ⏰ 每周日 24:00 重置天梯
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight tracking-tight mb-3">
               Challenge Room 竞技房
             </h2>
-            <p className="text-base font-bold text-slate-600">
-              <b>每周日晚 24:00 重置积分！</b> 上周考差了这周还能翻盘，杜绝“差距太大早早弃赛”。
-            </p>
           </div>
 
           {/* Interactive Challenge Room Widget */}
@@ -331,15 +320,12 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
             <div>
               <span className="bg-emerald-100 text-emerald-800 font-black text-xs px-3.5 py-1.5 rounded-full border-2 border-emerald-300 inline-block mb-3">
-                学科与通识精选
+                学科题库
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                覆盖全球初中生必读经典书目
+                初中必读经典书目
               </h2>
             </div>
-            <p className="text-sm font-bold text-slate-400 max-w-md">
-              从风靡全球的《Big Fat Notebook》系列到代数与几何先导，每一本书都配备完整的自研章节题库。
-            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -465,7 +451,7 @@ export default function HomePage() {
             </p>
             <div className="flex gap-3">
               <Link
-                href={`/student/quiz?bookId=${selectedBook.id}&chapterId=${selectedBook.defaultQuizId}`}
+                href={`/student/quiz/${selectedBook.defaultQuizId}`}
                 className="btn-3d btn-3d-green flex-1 py-3 text-sm rounded-xl text-center"
               >
                 立即开始答题挑战
@@ -477,6 +463,105 @@ export default function HomePage() {
                 关闭
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Mode Selection Modal (Play Now Flow) ─────────────────── */}
+      {modeStep !== "hidden" && (
+        <div
+          className="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setModeStep("hidden")}
+        >
+          <div
+            className="bg-white border-3 border-slate-200 rounded-[32px] p-8 sm:p-10 max-w-[680px] w-full shadow-2xl animate-[modalPop_0.25s_ease-out]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {modeStep === "select" && (
+              <>
+                <h2 className="text-center text-2xl sm:text-3xl font-black text-slate-900 mb-2">
+                  你想怎么开始？
+                </h2>
+                <p className="text-center text-sm font-bold text-slate-500 mb-7">
+                  选择你的探险方式 — 独立刷题 或 组队对战。
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Solo Card */}
+                  <button
+                    onClick={() => setModeStep("solo-books")}
+                    className="bg-slate-50 border-3 border-slate-200 rounded-3xl p-7 text-center hover:-translate-y-1 hover:border-[#1CB0F6] hover:shadow-[0_12px_0_#CBD5E1] active:translate-y-0 active:shadow-[0_4px_0_#CBD5E1] transition-all"
+                  >
+                    <span className="text-5xl block mb-3">📚</span>
+                    <div className="text-xl font-black text-slate-900 mb-1">单人阅读</div>
+                    <div className="text-xs font-bold text-slate-500 leading-relaxed">
+                      选一本书，按章节独立刷题，自由掌控节奏。
+                    </div>
+                  </button>
+
+                  {/* Multiplayer Card */}
+                  <button
+                    onClick={() => {
+                      setModeStep("hidden");
+                      const target = document.getElementById("challenge");
+                      if (target) target.scrollIntoView({ behavior: "smooth" });
+                      setTimeout(() => {
+                        const input = document.querySelector<HTMLInputElement>(
+                          'input[placeholder="849 203"]'
+                        );
+                        if (input) input.focus();
+                      }, 600);
+                    }}
+                    className="bg-slate-50 border-3 border-slate-200 rounded-3xl p-7 text-center hover:-translate-y-1 hover:border-[#E21B3C] hover:shadow-[0_12px_0_#CBD5E1] active:translate-y-0 active:shadow-[0_4px_0_#CBD5E1] transition-all"
+                  >
+                    <span className="text-5xl block mb-3">⚔️</span>
+                    <div className="text-xl font-black text-slate-900 mb-1">多人比赛</div>
+                    <div className="text-xs font-bold text-slate-500 leading-relaxed">
+                      输入房间 PIN 码，和同学或家人一起竞技冲榜。
+                    </div>
+                  </button>
+                </div>
+              </>
+            )}
+
+            {modeStep === "solo-books" && (
+              <>
+                <button
+                  onClick={() => setModeStep("select")}
+                  className="text-xs font-black text-slate-400 hover:text-blue-500 mb-4 flex items-center gap-1 transition-colors"
+                >
+                  ← 返回
+                </button>
+                <h2 className="text-center text-xl sm:text-2xl font-black text-slate-900 mb-2">
+                  选一本开始刷题
+                </h2>
+                <p className="text-center text-sm font-bold text-slate-500 mb-5">
+                  选择你今天想提高的学科。
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {FEATURED_BOOKS.map((book) => (
+                    <Link
+                      key={book.id}
+                      href={`/student/quiz/${book.defaultQuizId}`}
+                      className="flex items-center gap-3.5 bg-slate-50 border-3 border-slate-200 rounded-2xl p-3.5 text-left hover:-translate-y-1 hover:border-emerald-400 hover:shadow-[0_8px_0_#CBD5E1] active:translate-y-0 active:shadow-[0_3px_0_#CBD5E1] transition-all no-underline"
+                    >
+                      <img
+                        src={book.image}
+                        alt={book.title}
+                        className="w-16 h-20 object-cover rounded-xl border border-slate-100 flex-shrink-0"
+                      />
+                      <div>
+                        <div className="font-black text-[15px] text-slate-900 mb-0.5">
+                          {book.title}
+                        </div>
+                        <div className="text-xs font-bold text-slate-400">
+                          {book.chapters}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

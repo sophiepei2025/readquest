@@ -176,13 +176,6 @@ export function ChallengeRoomWidget({ initialPin = "849203", onJoinSuccess }: Ch
               </span>
             </div>
             <LeaderboardList runners={leaderboard.runners} />
-
-            <div className="mt-4 p-3.5 bg-emerald-50/80 border-2 border-emerald-200 rounded-2xl flex items-start gap-2.5 text-xs font-bold text-emerald-900">
-              <span className="text-base">💚</span>
-              <div>
-                <b>Duolingo 同款正向激励</b>：无论排在第几名，卡片上都会高亮你的个人努力（“较上周 +120分”），让每个孩子都能看到自己的真实进步！
-              </div>
-            </div>
           </div>
         </div>
       )}

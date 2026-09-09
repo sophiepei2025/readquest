@@ -77,3 +77,8 @@ body {
 .animate-float {
   animation: floatMascot 3s ease-in-out infinite;
 }
+
+@keyframes modalPop {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
